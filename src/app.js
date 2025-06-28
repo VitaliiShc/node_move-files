@@ -30,22 +30,24 @@ function moveFile() {
 
   let destDir = path.dirname(destPath);
   let destFileName = path.basename(destPath);
-  const lastCharOfDest = moveArgs[1].slice(-1);
+  const lastCharOfDest = destPath.slice(-1);
 
   if (lastCharOfDest === '/' || lastCharOfDest === '\\') {
     destDir = destPath;
     destFileName = srcFileName;
   }
 
-  if (!fs.existsSync(destDir)) {
-    console.error(`Destination directory ${destDir} does not exist`);
-
-    return;
-  }
-
   if (fs.existsSync(destPath) && fs.statSync(destPath).isDirectory()) {
     destDir = destPath;
     destFileName = srcFileName;
+  }
+
+  if (!fs.existsSync(destDir) || !fs.statSync(destDir).isDirectory()) {
+    console.error(
+      `Destination directory ${destDir} does not exist or is not a directory`,
+    );
+
+    return;
   }
 
   const destPathChecked = path.join(destDir, destFileName);
